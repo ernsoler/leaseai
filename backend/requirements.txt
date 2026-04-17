@@ -1,0 +1,27 @@
+# ── Core (always required) ────────────────────────────────────────────────────
+pymupdf>=1.24.0
+boto3>=1.34.0
+pydantic>=2.0.0
+backoff>=2.0.0
+
+# ── AI providers (install only what you need) ─────────────────────────────────
+# At least one provider SDK must be installed.  The app will raise a clear
+# ImportError at runtime if you try to use a provider whose SDK is missing.
+
+# Anthropic — Claude (default provider)
+anthropic>=0.40.0
+
+# OpenAI — GPT-4o, o1, etc.
+# openai>=1.30.0
+
+# Google — Gemini
+# google-generativeai>=0.7.0
+
+# Ollama — local models via HTTP (uses httpx, no SDK needed)
+# httpx>=0.27.0
+
+# ── Optional: uncomment to install all providers at once ──────────────────────
+# anthropic>=0.40.0
+# openai>=1.30.0
+# google-generativeai>=0.7.0
+# httpx>=0.27.0

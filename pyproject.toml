@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "leaseai-backend"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.40.0",
+    "pymupdf>=1.24.0",
+    "boto3>=1.34.0",
+    "pydantic>=2.0.0",
+    "backoff>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "moto[s3,dynamodb]>=5.0.0",
+    "boto3>=1.34.0",
+    "reportlab>=4.0.0",   # local only — generate test PDFs via scripts/generate_test_lease.py
+]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["."]
+
+[tool.pytest.ini_options.markers]
+unit = "fast unit tests — no real I/O"
+integration = "integration tests using moto fakes"
+
+[tool.setuptools.packages.find]
+include = ["backend*"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100

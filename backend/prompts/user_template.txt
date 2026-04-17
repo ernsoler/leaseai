@@ -1,0 +1,94 @@
+EXAMPLE RISKY CLAUSES TO WATCH FOR:                                                                                                                                                                                                                      
+                                                            
+  1. Early Termination Penalty (HIGH RISK):                                                                                                                                                                                                                
+     Original: "Tenant shall be liable for all remaining rent through the end of the lease term plus a fee equal to 2 months rent."                                                                                                                        
+     Risk: Double penalty — tenant pays both remaining rent AND a fee. Most states only allow one or the other.                                                                                                                                            
+     Recommendation: Negotiate to remove the additional fee, keeping only obligation to pay until unit is re-rented.
+                                                                                                                                                                                                                                                           
+  2. Automatic Renewal Trap (HIGH RISK):                    
+     Original: "This lease shall automatically renew for successive one-year terms unless Tenant provides written notice of non-renewal at least 60 days prior to expiration."                                                                             
+     Risk: 60 days is unusually long. Missing this deadline locks tenant into another full year.                                                                                                                                                           
+     Recommendation: Request reduction to 30 days notice, which is standard in most states.
+                                                                                                                                                                                                                                                           
+  3. Landlord Entry Without Notice (CRITICAL):              
+     Original: "Landlord may enter the premises at any time for inspection, repairs, or any other purpose."
+     Risk: Most states require 24-48 hours advance notice except in emergencies. This clause may be unenforceable.                                                                                                                                         
+     Recommendation: Request amendment to require 24-hour written notice except in genuine emergencies.
+                                                                                                                                                                                                                                                           
+  4. Security Deposit Deduction Loophole (HIGH RISK):       
+     Original: "Landlord may deduct from security deposit any amounts deemed necessary for cleaning, repairs, or restoration to original condition."                                                                                                       
+     Risk: Vague "deemed necessary" language gives landlord unchecked discretion. No objective standard.
+     Recommendation: Add "normal wear and tear excepted" and require itemized deductions with receipts within 21 days.                                                                                                                                     
+   
+  5. Liability Waiver (HIGH RISK):                                                                                                                                                                                                                         
+     Original: "Tenant waives all claims against Landlord for any injury, damage, or loss occurring on the premises."
+     Risk: Overbroad liability waivers are often unenforceable and may violate state law, but attempting to enforce them is costly.                                                                                                                        
+     Recommendation: Request removal entirely. Landlords cannot legally waive liability for their own negligence in most states.
+                                                                                                                                                                                                                                                           
+  IMPORTANT OUTPUT CONSTRAINTS (required to fit within model limits):
+  - Return at most 10 clauses total, prioritized by risk level: critical first, then high, then medium, then low.
+  - For original_text fields: include only the most relevant sentence or two (max 150 characters). Do not copy long paragraphs verbatim.
+  - For risk_explanation and recommendation fields: be concise — 1-2 sentences each.
+  - Keep all string values short and direct.
+
+  Now analyze the following lease agreement. Return ONLY a JSON object matching this exact schema — no other text:
+                                                                                                                                                                                                                                                           
+  {                                                         
+    "summary": {
+      "property_address": "string or null",
+      "landlord_name": "string or null",                                                                                                                                                                                                                   
+      "tenant_name": "string or null",
+      "lease_start": "YYYY-MM-DD or null",                                                                                                                                                                                                                 
+      "lease_end": "YYYY-MM-DD or null",                    
+      "monthly_rent": "number or null",
+      "security_deposit": "number or null",                                                                                                                                                                                                                
+      "lease_type": "fixed or month-to-month or null"
+    },                                                                                                                                                                                                                                                     
+    "clauses": [                                            
+      {
+        "id": "unique string like clause_001",
+        "category": "rent|deposit|maintenance|termination|renewal|pets|subletting|liability|insurance|utilities|parking|modifications|entry_access|other",                                                                                                 
+        "title": "short descriptive title",
+        "original_text": "exact verbatim text from the lease",                                                                                                                                                                                             
+        "risk_level": "low|medium|high|critical",                                                                                                                                                                                                          
+        "risk_explanation": "plain English explanation of why this is risky",
+        "recommendation": "specific actionable advice for the tenant",                                                                                                                                                                                     
+        "section_reference": "e.g. Section 4.2 or null"     
+      }                                                                                                                                                                                                                                                    
+    ],
+    "key_dates": [                                                                                                                                                                                                                                         
+      {                                                     
+        "event": "description of the event",
+        "date": "YYYY-MM-DD or null",
+        "notice_required": "e.g. 60 days written notice or null"
+      }                                                                                                                                                                                                                                                    
+    ],
+    "financial_summary": {                                                                                                                                                                                                                                 
+      "total_monthly_cost": "number or null",               
+      "total_move_in_cost": "number or null",
+      "annual_cost": "number or null",
+      "penalties": [                                                                                                                                                                                                                                       
+        {
+          "type": "e.g. late fee, early termination",                                                                                                                                                                                                      
+          "amount": "number or descriptive string",         
+          "condition": "when this penalty applies"
+        }
+      ]
+    },
+    "risk_score": {
+      "overall": "integer 1-100 where 100 is safest",                                                                                                                                                                                                      
+      "breakdown": {
+        "financial_risk": "integer 1-100",                                                                                                                                                                                                                 
+        "termination_risk": "integer 1-100",                
+        "maintenance_risk": "integer 1-100",
+        "legal_risk": "integer 1-100"                                                                                                                                                                                                                      
+      }
+    },                                                                                                                                                                                                                                                     
+    "missing_clauses": ["list of important clauses not present in this lease"],
+    "red_flags": ["list of serious issues requiring immediate attention before signing"]
+  }                                                                                                                                                                                                                                                        
+   
+  LEASE DOCUMENT:                                                                                                                                                                                                                                          
+  ---                                                       
+  <<<LEASE_TEXT>>>
+  ---

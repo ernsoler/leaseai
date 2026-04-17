@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.vite/
+package-lock.json
+
+# CDK
+infra/cdk.out/
+infra/.venv/
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.local
+.vercel
+
+# Backend packaging
+backend/dist/
+*.zip
+
+# Generated test files
+lease_agreement_test.pdf
+
+CLAUDE.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
