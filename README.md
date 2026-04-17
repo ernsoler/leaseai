@@ -12,6 +12,12 @@ Portfolio project — a fully deployable serverless SaaS demonstrating async job
 
 ---
 
+## Demo
+
+https://github.com/user-attachments/assets/3ffaa5db-11e8-46d5-96ea-fd5c331c57c0
+
+---
+
 ## What it does
 
 Tenants upload a PDF rental agreement and receive a plain-English risk report that:
