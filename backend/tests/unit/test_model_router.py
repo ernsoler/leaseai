@@ -11,7 +11,6 @@ from unittest.mock import patch
 from backend.lib.model_router import (
     ModelConfig,
     get_model_config,
-    get_model,
     PROVIDER_DEFAULTS,
     _DEFAULT_PROVIDER,
 )
@@ -125,20 +124,3 @@ class TestModelOverride:
         assert cfg.provider == "anthropic"
         assert cfg.model_id == "claude-opus-4-5"
 
-
-# ── get_model() convenience shim ──────────────────────────────────────────────
-
-class TestGetModelShim:
-    def test_returns_string(self):
-        with _env(AI_PROVIDER=None, AI_MODEL=None):
-            result = get_model()
-        assert isinstance(result, str)
-        assert result  # non-empty
-
-    def test_returns_same_model_id_as_get_model_config(self):
-        with _env(AI_PROVIDER=None, AI_MODEL=None):
-            assert get_model() == get_model_config().model_id
-
-    def test_respects_env_override(self):
-        with _env(AI_PROVIDER="openai", AI_MODEL="gpt-4o"):
-            assert get_model() == "gpt-4o"

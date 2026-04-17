@@ -1,11 +1,20 @@
+VENV   := .venv
+PIP    := $(VENV)/bin/pip
+PYTEST := $(VENV)/bin/pytest
+RUFF   := $(VENV)/bin/ruff
+
 .PHONY: install dev deploy test test-unit test-integration package clean
 
+# ── Venv ─────────────────────────────────────────────────────────────────────
+$(VENV):
+	python3 -m venv $(VENV)
+
 # ── Install ──────────────────────────────────────────────────────────────────
-install:
+install: $(VENV)
 	@echo "Installing backend dependencies..."
-	pip install -e ".[dev]"
+	$(PIP) install -e ".[dev]"
 	@echo "Installing CDK dependencies..."
-	cd infra && pip install -r requirements.txt
+	cd infra && $(CURDIR)/$(PIP) install -r requirements.txt
 	@echo "Installing frontend dependencies..."
 	cd frontend && pnpm install
 
@@ -15,20 +24,20 @@ dev:
 
 # ── Lint ──────────────────────────────────────────────────────────────────────
 lint:
-	ruff check backend/
+	$(RUFF) check backend/
 
 lint-fix:
-	ruff check backend/ --fix
+	$(RUFF) check backend/ --fix
 
 # ── Test ──────────────────────────────────────────────────────────────────────
 test:
-	pytest backend/tests/ -v --tb=short
+	$(PYTEST) backend/tests/ -v --tb=short
 
 test-unit:
-	pytest backend/tests/unit/ -v --tb=short
+	$(PYTEST) backend/tests/unit/ -v --tb=short
 
 test-integration:
-	pytest backend/tests/integration/ -v --tb=short
+	$(PYTEST) backend/tests/integration/ -v --tb=short
 
 # ── Package Lambdas ───────────────────────────────────────────────────────────
 # Bundles each Lambda handler with its dependencies into a zip file.

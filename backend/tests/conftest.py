@@ -99,11 +99,11 @@ SAMPLE_ANALYSIS = {
 
 @pytest.fixture(autouse=True)
 def clear_prompt_cache():
-    """Clear the S3 prompt cache before every test to prevent cross-test leakage."""
-    from backend.lib.prompt_store import _fetch_from_s3
-    _fetch_from_s3.cache_clear()
+    """Clear the prompt cache before every test to prevent cross-test leakage."""
+    from backend.lib.prompt_store import _read_bundled
+    _read_bundled.cache_clear()
     yield
-    _fetch_from_s3.cache_clear()
+    _read_bundled.cache_clear()
 
 
 # ── Core AWS fixture ──────────────────────────────────────────────────────────
@@ -164,7 +164,6 @@ def aws_setup():
         import backend.handlers.get_results as get_results_mod
         import backend.handlers.presign     as presign_mod
         import backend.handlers.submit      as submit_mod
-        import backend.lib.prompt_store     as prompt_store_mod
 
         fresh_s3  = boto3.client("s3",  region_name=REGION)
         fresh_sqs = boto3.client("sqs", region_name=REGION)
@@ -175,7 +174,6 @@ def aws_setup():
         presign_mod.s3_client      = fresh_s3
         submit_mod.dynamodb        = dynamo
         submit_mod.sqs_client      = fresh_sqs
-        prompt_store_mod._s3       = fresh_s3
 
         yield {
             "s3":             s3,
@@ -236,22 +234,6 @@ def mock_ai_client():
             )
         return client
     return _factory
-
-
-@pytest.fixture
-def make_event():
-    """Returns a callable that builds a Lambda event dict."""
-    def _make(
-        body: dict | None = None,
-        path_params: dict | None = None,
-        api_key: str = "test-key-123",
-    ) -> dict:
-        return {
-            "body":            json.dumps(body or {}),
-            "headers":         {"x-api-key": api_key},
-            "pathParameters":  path_params,
-        }
-    return _make
 
 
 @pytest.fixture
