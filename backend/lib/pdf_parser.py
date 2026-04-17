@@ -2,10 +2,8 @@
 PDF parsing utilities for LeaseAI.
 
 Uses PyMuPDF (fitz) for text extraction.
-Detects scanned PDFs, strips repeated headers/footers,
-and splits text into logical lease sections.
+Detects scanned PDFs and strips repeated headers/footers.
 """
-import re
 import logging
 from collections import Counter
 
@@ -83,50 +81,3 @@ def _strip_repeated_lines(full_text: str, pages_text: list[str]) -> str:
     ]
     return "\n".join(cleaned_lines)
 
-
-# Patterns that indicate a new section heading
-_SECTION_PATTERNS = [
-    re.compile(r"^(\d+[\.\)]\s+[A-Z][A-Za-z\s]{3,})"),           # 1. Rent Payment
-    re.compile(r"^([A-Z][A-Z\s]{4,}:?\s*$)"),                      # SECURITY DEPOSIT
-    re.compile(r"^(ARTICLE\s+\d+[:\.\s])", re.IGNORECASE),         # Article 1.
-    re.compile(r"^(SECTION\s+\d+[:\.\s])", re.IGNORECASE),         # Section 3.
-    re.compile(r"^(\([a-z]\)\s+[A-Z])"),                            # (a) Tenant agrees
-]
-
-
-def extract_sections(text: str) -> list[dict]:
-    """
-    Split lease text into logical sections by detecting headings.
-
-    Returns a list of dicts: [{"title": str, "content": str}, ...]
-    """
-    lines = text.splitlines()
-    sections: list[dict] = []
-    current_title = "Preamble"
-    current_lines: list[str] = []
-
-    for line in lines:
-        stripped = line.strip()
-        is_heading = any(pat.match(stripped) for pat in _SECTION_PATTERNS)
-
-        if is_heading and len(stripped) > 4:
-            if current_lines:
-                content = "\n".join(current_lines).strip()
-                if content:
-                    sections.append({"title": current_title, "content": content})
-            current_title = stripped
-            current_lines = []
-        else:
-            current_lines.append(line)
-
-    # Flush the last section
-    if current_lines:
-        content = "\n".join(current_lines).strip()
-        if content:
-            sections.append({"title": current_title, "content": content})
-
-    if not sections:
-        # No sections detected — return the full text as one chunk
-        sections = [{"title": "Full Document", "content": text}]
-
-    return sections

@@ -79,7 +79,3 @@ def get_model_config() -> ModelConfig:
     logger.info("model_router: provider default provider=%s model=%s", config.provider, config.model_id)
     return config
 
-
-def get_model() -> str:
-    """Return just the model ID string. Convenience wrapper around get_model_config()."""
-    return get_model_config().model_id
